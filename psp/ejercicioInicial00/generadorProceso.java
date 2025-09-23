@@ -1,47 +1,27 @@
-package ej2;
+package ej1;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class generadorProceso {
-	public void ejecutar(String ruta) {
-		List <String> nombreArgumentos = new ArrayList<>();
+	public void ejecutar(String ruta, String rutaDirectorio, String nombreEjecutable) {
+		//List <String> nombreArgumentos = new ArrayList<>();
+		File directorio = new File(rutaDirectorio);
+		File ejecutable = new File(directorio, nombreEjecutable);
 		
-		if(ruta == null || ruta.isEmpty()) {
-			System.out.println("Falta el nombre del comando");
-			System.exit(1);
-		}
+		ProcessBuilder pb/*clase para construir el proceso*/ = new ProcessBuilder(ejecutable.getAbsolutePath());
 		
-		nombreArgumentos.add(ruta);
-		ProcessBuilder pb = new ProcessBuilder();
-		pb.command(nombreArgumentos);
+		// comand nombre del ejecutable
+		//pb.command(nombreEjecutable);
+		// nombre del directorio donde se encuentra
+		pb.directory(directorio);
 		
-		// llamada a inheritIO() --> hace que el proceso herede la entrada/salida estándar del proceso padre
-		// así podemos ver el resultado del comando
-		pb.inheritIO();
-		
-		try {
-			Process proceso = pb.start();
-			int codigoRetorno = proceso.waitFor();
-			System.out.println("$$$$$$$$$$$$$$$$");
-			System.out.println("El comando devuelve: " + codigoRetorno);
-			System.out.println("$$$$$$$$$$$$$$$$");
-			
-			if(codigoRetorno==0) {
-				System.out.println("Ejecución correcta");
-			} else {
-				System.out.println("Ejecución con errores");
-			}
-		} catch(IOException e) {
-			System.out.println("Error durante la ejecución del comando");
-			System.out.println("INFORMACIÓN ADICIONAL");
-			e.printStackTrace();
-			System.exit(2);
-		}
-		catch(InterruptedException e) {
-			System.err.println("Proceso interrumpido");
-			System.exit(3);
+		try { // meter parte del código que debe de ir bien
+			//Process proceso = pb.start(); // de aquí se obtiene el proceso
+			pb.start();
+		} catch(Exception e) {
+			e.printStackTrace(); // si hay algún error, te saca la info (traza)
 		}
 	}
 }

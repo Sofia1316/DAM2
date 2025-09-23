@@ -1,14 +1,14 @@
-package ej1;
+package ej3;
 
 public class principal {
 
 	public static void main(String[] args) {
-		String ruta = "C:/Windows/System32/WindowsPowerShell/v1.0";
-		String nombre = "powershell.exe";
+		String ruta = "ipconfig";
+		String [] parámetros = {"/all"};
 		
 		generadorProceso lanzador = new generadorProceso();
-		//lanzador.ejecutar(ruta, nombre);
 		
+		lanzador.ejecutar(ruta, parámetros);
 		System.out.println("Proceso ejecutado");
 	}
 
