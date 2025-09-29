@@ -2,6 +2,8 @@ package ejercicios00;
 
 import java.io.*;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class apartado2 {
 	
@@ -117,6 +119,34 @@ public class apartado2 {
 		}
 	}
 	
+	public static void ej2() {	
+		int a = 0, e = 0, i = 0, o = 0, u = o;
+		String texto = "Texto para pasar la expresión regular";
+		texto = texto.toLowerCase();
+		Pattern patron = Pattern.compile("[aeiou]"); // un pattern es un patrón
+		Matcher match = patron.matcher(texto); // clase para buscar dentro de un pattern
+		
+		 while (match.find()) {
+	        String letra = match.group();
+	        if (letra.equals("a")) {
+	            a++;
+	        } else if (letra.equals("e")) {
+	            e++;
+	        } else if (letra.equals("i")) {
+	            i++;
+	        } else if (letra.equals("o")) {
+	            o++;
+	        } else if (letra.equals("u")) {
+	            u++;
+	        }
+		}
+		System.out.println("A: " + a);
+		System.out.println("E: " + e);
+		System.out.println("I: " + i);
+		System.out.println("O: " + o);
+		System.out.println("U: " + u);
+	}
+	
 	static Scanner entrada = new Scanner(System.in);
 	public static void main(String[] args) {
 		System.out.println("¿Que ej quieres hacer?");
@@ -126,6 +156,9 @@ public class apartado2 {
 		switch(num) {
 		case 1:
 			ej1();
+			break;
+		case 2:
+			ej2();
 			break;
 		case 9:
 			ej9();
