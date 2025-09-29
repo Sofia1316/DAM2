@@ -32,10 +32,12 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hola.ui.theme.HolaTheme
@@ -152,28 +154,66 @@ fun randomColor(): Color{ // para decir el parámetro de salida
 @Composable
 fun ImagenConTexto2(){
     var BackgroundBoxColor by remember{ mutableStateOf(Color.White) }
-    var textPosition by remember{mutableStateOf(Offset(0f,0f))}
-    Box(modifier = Modifier.fillMaxSize().padding(25.dp).background(BackgroundBoxColor)){
+    var textPosition by remember{mutableStateOf(Offset(0f,0f))} // el offset es para coordenadas X e Y
+    var imagePosition by remember {mutableStateOf(Offset(0f, 0f))}
+    var anchoPantalla by remember {mutableStateOf(0f)}
+    var altoPantalla by remember {mutableStateOf(0f)}
+    var anchoTexto by remember {mutableStateOf(0f)}
+    var altoTexto by remember {mutableStateOf(0f)}
+
+    Box(modifier = Modifier.fillMaxSize().padding(25.dp).background(BackgroundBoxColor).
+    onGloballyPositioned{coordenadas ->
+        anchoPantalla = coordenadas.size.width.toFloat()
+        altoPantalla = coordenadas.size.height.toFloat()
+
+        if (textPosition == Offset(0f, 0f)){
+            textPosition = Offset(anchoPantalla / 2, altoPantalla / 2)
+        }
+    }){
+
+
+
+
         Image(
             painter = painterResource(id = R.drawable.drogon),
             contentDescription = "Dragón GOT",
-            modifier = Modifier.align(Alignment.Center).fillMaxSize()
+            modifier = Modifier.offset{
+                IntOffset(imagePosition.x.toInt(), imagePosition.y.toInt())
+            }.pointerInput(Unit){
+                detectDragGestures {
+                    change, dragAmount -> change.consume()
+                    imagePosition += Offset(dragAmount.x, dragAmount.y)}
+            }
+
         )
-        Text(text="Drogon",
+        Text(text="Drogon siendo imponente",
             fontSize = 22.sp,
             color=Color.Green,
             textAlign = TextAlign.Center, // centrado en la línea en la que estoy escribiendo
-            modifier = Modifier.align(Alignment.Center) //
+            modifier = Modifier
+                .onGloballyPositioned{
+                    coordenadas ->
+                    anchoTexto = coordenadas.size.width.toFloat()
+                    altoTexto = coordenadas.size.height.toFloat()
+
+                    if (textPosition == Offset(0f, 0f)) {
+                        textPosition = Offset((anchoPantalla - anchoTexto) / 2, (altoPantalla - altoPantalla) / 2)
+                    }
+                }
+
+                .offset{
+                IntOffset(textPosition.x.toInt(),textPosition.y.toInt())
+            }.pointerInput(Unit){
+                detectDragGestures { change, dragAmount ->
+                    change.consume() // ?
+                    textPosition += Offset(dragAmount.x,dragAmount.y)} // en el eje X y en el eje Y donde acaba el texto
+            }
         )
         Button(
             onClick = {BackgroundBoxColor = randomColor()},
             //modifier= Modifier.align(Alignment.TopStart)
             // La mayus es una clase y la minuscula de offset para situar algún elemento
-            modifier= Modifier.offset{
-                intOffset(textPosicion.x.toInt(),textPosition.y.toInt())
-            }.pointerInput(Unit){
-                detectDragGestures { change, dragAmount ->  textPosition = Offset(dragAmount.x,dragAmount.y)}
-            }
+            modifier= Modifier.align(Alignment.TopStart)
         )
         {
             Text(text="Cambiar fondo") // detrás de cada button, poner un text entre llaves
