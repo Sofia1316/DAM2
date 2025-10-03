@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +32,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 //import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -52,7 +55,8 @@ class MainActivity : ComponentActivity() {
             //DosTextosVertical()
             //dispos()
             //ejemploBox()
-            ImagenConTexto2()
+            //ImagenConTexto2()
+            imagenConZoom()
         }
     }
 }
@@ -169,10 +173,9 @@ fun ImagenConTexto2(){
         if (textPosition == Offset(0f, 0f)){
             textPosition = Offset(anchoPantalla / 2, altoPantalla / 2)
         }
-    }){
+    })
 
-
-
+    {
 
         Image(
             painter = painterResource(id = R.drawable.drogon),
@@ -225,3 +228,46 @@ fun ImagenConTexto2(){
 fun drogonView2(){
     ImagenConTexto2()
 }
+
+// EJEMPLO 6
+@Preview
+@Composable
+fun imagenConZoom(){
+    var escalaImagen by remember {mutableStateOf(1f)} // con valor mutable hay que meter un valor inicial
+    var posicionImagen by remember {mutableStateOf(Offset(0f, 0f))}
+    var anguloRotacion by remember{mutableStateOf(0f)}
+
+    Box(
+        modifier = Modifier.fillMaxSize().pointerInput(Unit){
+            detectTransformGestures {_, desplazamiento, zoom, rotacion  ->
+                escalaImagen = escalaImagen * zoom
+                posicionImagen += desplazamiento
+                anguloRotacion += rotacion
+            }
+        }.pointerInput(Unit){
+            detectTapGestures (onDoubleTap = {
+                // devolvemos la imagen a su estado inicial
+                escalaImagen = 1f
+                posicionImagen = Offset(0f, 0f)
+                anguloRotacion = 0f
+            })
+        }
+        , contentAlignment = Alignment.Center
+    )
+
+    {
+        Image(
+            painter = painterResource(id = R.drawable.drogon),
+            contentDescription = "Drogon mirando",
+            modifier = Modifier.graphicsLayer(
+                scaleX = escalaImagen.coerceIn(0.5f, 3f),
+                scaleY = escalaImagen.coerceIn(0.5f, 3f),
+                translationX = posicionImagen.x,
+                translationY = posicionImagen.y,
+                rotationZ = anguloRotacion
+            )
+        )
+    }
+}
+
+
