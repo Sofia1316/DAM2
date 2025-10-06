@@ -10,9 +10,16 @@ public class Hilo implements Runnable{
 		this.cont = c;
 	}
 	
+	public int getCuenta() {
+		return miCuenta;
+	}
+	
+	@Override
 	public void run() {
-		for(int i = 0; i < 10; i++) {
-			miParte++;
+		for(int i = 0; i < miParte; i++) {
+			this.cont.incrementa(); // incremento el contador compartido
+			miCuenta++;
 		}
+		System.out.println("Hilo " + numHilo + " terminado, cuenta " + cont.getCuenta());
 	}
 }

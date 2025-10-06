@@ -6,14 +6,14 @@ import java.util.ArrayList;
 public class lanzaHilo {
 	
 	private static final int numHilos = 10;
-	private static final int cuentaTotal = 10000;
+	private static final int cuentaTotal = 100000;
 	
 	public static void main(String[] args) {
 		Contador contCompartido = new Contador();
 		Thread[] hilos = new Thread[numHilos];
 		
-		for (int i = 0; i < 9; i++) {
-			Thread th = new Thread(new Hilo("hilo " + i, cuentaTotal/numHilos, contCompartido));
+		for (int i = 0; i < numHilos; i++) {
+			Thread th = new Thread(new Hilo(i, cuentaTotal/numHilos, contCompartido));
 			th.start();
 			hilos[i] = th;
 		}
@@ -25,6 +25,6 @@ public class lanzaHilo {
 				e.getStackTrace();
 			}
 		}
-		System.out.println("Cuenta global: " + contCompartido);
+		System.out.println("Cuenta global: " + contCompartido.getCuenta());
 	}
 }
