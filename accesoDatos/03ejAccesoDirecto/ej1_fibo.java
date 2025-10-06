@@ -1,4 +1,4 @@
-package ejercicios01;
+package EjsAccesoDirecto;
 
 import java.io.*;
 import java.io.RandomAccessFile;
