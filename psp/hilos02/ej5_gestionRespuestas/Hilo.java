@@ -20,15 +20,19 @@ public class Hilo implements Runnable{
 			int randomIntRango = (int) (Math.random() * 4);
 			switch(randomIntRango) {
 			case 0:
+				cont.incrementa();
 				cont.incrementa2();
 				break;
 			case 1:
+				cont.incrementa();
 				cont.incrementa3();
 				break;
 			case 2:
+				cont.incrementa();
 				cont.incrementa4();
 				break;
 			case 3:
+				cont.incrementa();
 				cont.incrementa5();
 				break;
 			}
