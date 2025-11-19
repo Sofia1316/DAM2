@@ -1,10 +1,10 @@
 package Traductor_dividido;
 
 import javax.swing.JPanel;
-import java.awt.Dimension;
+import java.awt.*;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JButton;
+import javax.swing.*;
 
 public class Panel extends JPanel{
 	private JTextField PIN;
@@ -36,5 +36,7 @@ public class Panel extends JPanel{
 		POUT.setBounds(180, 131, 121, 20);
 		add(POUT);
 		POUT.setColumns(10);
+		
+		boton.addActionListener(new EventoTraducir(PIN, POUT));
 	}
 }
